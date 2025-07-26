@@ -1,103 +1,82 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useState } from "react";
+import CardStore from "@/components/Stroe/CardStore";
+import RestaurantFilter from "@/components/Stroe/RestaurantFilter";
+import EmptyState from "@/components/EmptyState";
+import { stores as restaurantList, categories } from "@/data/stores";
+
+/**
+ * หน้าหลักของแอป - แสดงรายการร้านอาหาร
+ * ผู้ใช้สามารถค้นหาและกรองร้านอาหารได้
+ */
+function HomePage() {
+  // สถานะสำหรับการกรองข้อมูล
+  const [selectedCategory, setSelectedCategory] = useState("ทั้งหมด");
+  const [searchText, setSearchText] = useState("");
+  const [locationText, setLocationText] = useState("");
+
+  /**
+   * กรองรายการร้านอาหารตามเงื่อนไขที่ผู้ใช้เลือก
+   */
+  const getFilteredRestaurants = () => {
+    return restaurantList.filter((restaurant) => {
+      // ตรวจสอบหมวดหมู่
+      const categoryMatches =
+        selectedCategory === "ทั้งหมด" ||
+        restaurant.category === selectedCategory;
+
+      // ตรวจสอบชื่อร้าน (ไม่สนใจตัวพิมพ์เล็ก-ใหญ่)
+      const nameMatches = restaurant.name
+        .toLowerCase()
+        .includes(searchText.toLowerCase());
+
+      // ตรวจสอบที่อยู่ (ไม่สนใจตัวพิมพ์เล็ก-ใหญ่)
+      const locationMatches =
+        locationText === "" ||
+        restaurant.address.toLowerCase().includes(locationText.toLowerCase());
+
+      // ต้องผ่านเงื่อนไขทั้งหมด
+      return categoryMatches && nameMatches && locationMatches;
+    });
+  };
+
+  const filteredRestaurants = getFilteredRestaurants();
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="space-y-8">
+      {/* ส่วนกรองและค้นหา */}
+      <RestaurantFilter
+        categories={categories}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+        search={searchText}
+        setSearch={setSearchText}
+        location={locationText}
+        setLocation={setLocationText}
+      />
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+      {/* ส่วนแสดงผลร้านอาหาร */}
+      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 xl:grid-cols-4">
+        {filteredRestaurants.length === 0 ? (
+          // แสดงเมื่อไม่พบร้านอาหาร
+          <EmptyState value="ไม่พบร้านอาหารที่ตรงกับการค้นหา" />
+        ) : (
+          // แสดงรายการร้านอาหาร
+          filteredRestaurants.map((restaurant) => (
+            <CardStore
+              key={restaurant.id}
+              address={restaurant.address}
+              rating={restaurant.rating}
+              image={restaurant.image}
+              name={restaurant.name}
+              id={restaurant.id}
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          ))
+        )}
+      </div>
     </div>
   );
 }
+
+export default HomePage;
