@@ -2,8 +2,15 @@ import React from "react";
 
 export default function OrderSuccessDetail({ open, onClose, orderId }) {
   if (!open) return null;
-  // simple base64 encode for id
-  const encodedId = typeof orderId === "number" ? btoa(orderId.toString()) : "";
+  // always encode orderId if exists (string or number)
+  let encodedId = "";
+  if (orderId) {
+    try {
+      encodedId = typeof window !== 'undefined' ? window.btoa(typeof orderId === 'string' ? orderId : orderId.toString()) : orderId;
+    } catch (e) {
+      encodedId = orderId;
+    }
+  }
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
       <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full text-center relative">
@@ -24,7 +31,19 @@ export default function OrderSuccessDetail({ open, onClose, orderId }) {
           </div>
           <h2 className="text-2xl font-bold text-green-600 mb-2">สั่งซื้อสำเร็จ!</h2>
           <p className="text-gray-700 mb-2">ขอบคุณที่ใช้บริการ</p>
-          <div className="text-sm text-gray-500 mb-2">รหัสออเดอร์ (เข้ารหัส): <span className="font-mono select-all">{encodedId}</span></div>
+          <div className="text-sm text-gray-500 mb-2 flex items-center justify-center gap-2">
+            รหัสออเดอร์ (เข้ารหัส):
+            <span className="font-mono select-all">{encodedId}</span>
+            <button
+              className="ml-2 px-2 py-1 text-xs bg-gray-200 hover:bg-gray-300 rounded"
+              onClick={() => {
+                if (encodedId) navigator.clipboard.writeText(encodedId);
+              }}
+              title="คัดลอกรหัส"
+            >
+              คัดลอก
+            </button>
+          </div>
           <div className="text-xs text-gray-400">(ใช้รหัสนี้เพื่อตรวจสอบสถานะออเดอร์)</div>
         </div>
         <button

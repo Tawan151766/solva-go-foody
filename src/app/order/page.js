@@ -64,7 +64,18 @@ export default function OrderPage() {
       });
       const data = await res.json();
       if (data?.data?.order?.id) {
-        setOrderId(data.data.order.id);
+        // แปลง id เป็น base64 ก่อนส่งไปแสดงผลหรือค้นหา
+        const orderId = data.data.order.id;
+        const hashId = typeof window !== 'undefined' ? window.btoa(orderId) : orderId;
+        // fetch order by id (uuid) (ยังใช้ id จริงในการ fetch)
+        try {
+          const orderRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${orderId}`);
+          const orderData = await orderRes.json();
+          // สามารถนำ orderData ไปใช้แสดงผลหรือเก็บใน state เพิ่มเติมได้
+        } catch (e) {
+          // กรณีดึง order ไม่สำเร็จ
+        }
+        setOrderId(hashId); // เก็บ hashId แทน id จริง
         setOrderSuccess(true);
         clearCart();
       } else {
@@ -108,7 +119,7 @@ export default function OrderPage() {
     return (
       <OrderSuccessDetail
         open={orderSuccess}
-        orderId={orderId}
+        orderId={orderId ? (typeof window !== 'undefined' ? window.atob(orderId) : orderId) : ''}
         onClose={() => setOrderSuccess(false)}
       />
     );
