@@ -49,7 +49,7 @@ export default function CartList({ grouped, handleQty, removeFromCart }) {
                     </div>
                     {item.note && (
                       <p className="text-xs text-gray-500 bg-yellow-50 px-2 py-1 rounded-lg border border-yellow-200">
-                        📝 {item.note}
+                      {item.note}
                       </p>
                     )}
                   </div>

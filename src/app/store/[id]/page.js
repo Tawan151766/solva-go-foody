@@ -2,6 +2,7 @@
 
 
 import StoreDetail from "@/components/Stroe/Detail/StoreDetail";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import MenuList from "@/components/Stroe/Detail/MenuList";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -30,7 +31,7 @@ export default function StoreDetailPage() {
       });
   }, [params.id]);
 
-  if (loading) return <div className="p-8">Loading...</div>;
+  if (loading) return <LoadingSpinner />;
   if (!store) return <div className="p-8">ไม่พบข้อมูลร้าน</div>;
 
   return (

@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from 'react';
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 /**
  * Component สำหรับโหลด Google Maps JavaScript API
@@ -61,7 +62,7 @@ export default function GoogleMapsScript({ children, apiKey, fallback = null }) 
         <div className="flex items-center justify-center p-8">
           <div className="text-center">
             <div className="w-8 h-8 border-2 border-[#2563eb] border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
-            <p className="text-gray-600 text-sm">กำลังโหลด Google Maps...</p>
+            <LoadingSpinner text="กำลังโหลด Google Maps..." className="text-sm" />
           </div>
         </div>
       )

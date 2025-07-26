@@ -1,6 +1,7 @@
 "use client";
 
 import { useContext, useState } from "react";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 import CardStore from "@/components/Stroe/CardStore";
 import EmptyState from "@/components/EmptyState";
@@ -14,6 +15,10 @@ import { useEffect } from "react";
 function HomePage() {
   // Use filter from FilterContext (global state)
   const { filteredStores } = useContext(FilterContext);
+
+  if (!filteredStores) {
+    return <LoadingSpinner />;
+  }
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(4);
   // Responsive pageSize: md = 3, default = 4
