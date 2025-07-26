@@ -21,7 +21,6 @@ foody/
 │   │
 │   ├── context/              # React Context สำหรับจัดการ State
 │   │   ├── CartContext.js    # จัดการสถานะตะกร้าสินค้า
-│   │   ├── ThemeContext.js   # จัดการธีม (สี/โหมด)
 │   │   └── LocaleContext.js  # จัดการภาษา
 │   │
 │   ├── hooks/                # Custom Hooks
@@ -131,11 +130,6 @@ npm run dev
 - `addToCart()`: เพิ่มสินค้าลงตะกร้า
 - `removeFromCart()`: ลบสินค้าออกจากตะกร้า
 - `clearCart()`: ล้างตะกร้าทั้งหมด
-
-### ThemeContext
-จัดการธีมของแอป:
-- `theme`: ธีมปัจจุบัน (light/dark)
-- `toggleTheme()`: เปลี่ยนธีม
 
 ### LocaleContext
 จัดการภาษา:
