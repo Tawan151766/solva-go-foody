@@ -18,17 +18,35 @@ export function CartProvider({ children }) {
 
   /**
    * เมื่อ component โหลดเสร็จ (client-side)
-   * จะตั้งสถานะว่าแอปพร้อมใช้งาน
+   * จะตั้งสถานะว่าแอปพร้อมใช้งานและโหลดข้อมูลจาก localStorage
    */
   useEffect(() => {
     setIsAppReady(true);
     
-    // ในอนาคตสามารถเพิ่มการบันทึกข้อมูลใน localStorage ได้ที่นี่
-    // const savedCartItems = localStorage.getItem('cartItems');
-    // if (savedCartItems) {
-    //   setCartItems(JSON.parse(savedCartItems));
-    // }
+    // โหลดข้อมูลตะกร้าจาก localStorage
+    try {
+      const savedCartItems = localStorage.getItem('foody_cart');
+      if (savedCartItems) {
+        const parsedItems = JSON.parse(savedCartItems);
+        setCartItems(parsedItems);
+      }
+    } catch (error) {
+      console.error('Error loading cart from localStorage:', error);
+    }
   }, []);
+
+  /**
+   * บันทึกข้อมูลตะกร้าลง localStorage เมื่อมีการเปลี่ยนแปลง
+   */
+  useEffect(() => {
+    if (isAppReady) {
+      try {
+        localStorage.setItem('foody_cart', JSON.stringify(cartItems));
+      } catch (error) {
+        console.error('Error saving cart to localStorage:', error);
+      }
+    }
+  }, [cartItems, isAppReady]);
 
   /**
    * เพิ่มสินค้าลงตะกร้า

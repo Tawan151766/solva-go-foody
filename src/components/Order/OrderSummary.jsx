@@ -1,9 +1,11 @@
+import { HiStar } from "react-icons/hi";
+
 export default function OrderSummary({ 
   grouped, 
   selectedStores, 
   onStoreSelection, 
   onSelectAll, 
-  onProceedToPayment, 
+  onProceedToDelivery, 
   selectedTotal 
 }) {
   const storeEntries = Object.entries(grouped);
@@ -73,9 +75,7 @@ export default function OrderSummary({
                     />
                     <div className="flex items-center gap-3">
                       <div className="w-12 h-12 bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] rounded-full flex items-center justify-center">
-                        <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                        </svg>
+                        <HiStar className="w-6 h-6 text-white" />
                       </div>
                       <div>
                         <h3 className="text-xl font-bold text-gray-900">{storeData.storeName}</h3>
@@ -138,7 +138,7 @@ export default function OrderSummary({
         </div>
         
         <button
-          onClick={onProceedToPayment}
+          onClick={onProceedToDelivery}
           disabled={selectedStores.size === 0}
           className={getButtonClassName(selectedStores.size === 0)}
         >

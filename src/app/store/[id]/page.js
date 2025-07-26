@@ -18,7 +18,11 @@ export default function StoreDetailPage() {
           <StoreDetail store={store} />
         </div>
         <div className="lg:w-1/2 w-full">
-          <MenuList menuCategories={menuCategories} menus={menus} store={store} />
+          <MenuList
+            menuCategories={menuCategories}
+            menus={menus}
+            store={store}
+          />
         </div>
       </div>
     </div>

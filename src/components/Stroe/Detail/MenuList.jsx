@@ -1,5 +1,6 @@
 "use client";
 import { useCart } from "@/context/CartContext";
+import { HiOutlineSparkles, HiOutlineCake, HiOutlineUser } from "react-icons/hi";
 import { useState } from "react";
 
 /**
@@ -81,13 +82,7 @@ export default function MenuList({ menuCategories, menus, store }) {
       <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
         <div className="p-6 border-b border-gray-100">
           <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-            <svg
-              className="w-6 h-6 text-[#2563eb]"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path d="M8.1 13.34l2.83-2.83L3.91 3.5c-1.56 1.56-1.56 4.09 0 5.66l4.19 4.18zm6.78-1.81c1.53.71 3.68.21 5.27-1.38 1.91-1.91 2.28-4.65.81-6.12-1.46-1.46-4.2-1.1-6.12.81-1.59 1.59-2.09 3.74-1.38 5.27L3.7 19.87l1.41 1.41L12 14.41l6.88 6.88 1.41-1.41-6.88-6.88 1.37-1.37z" />
-            </svg>
+            <HiOutlineSparkles className="w-6 h-6 text-[#2563eb]" />
             เมนูร้านอาหาร
           </h2>
         </div>
@@ -97,32 +92,11 @@ export default function MenuList({ menuCategories, menus, store }) {
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] rounded-full flex items-center justify-center shadow-lg">
                   {cat.id === 1 ? (
-                    <svg
-                      width="20"
-                      height="20"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M12 2C7.03 2 2.73 5.61 2.07 10.5c-.09.67.41 1.27 1.09 1.27h17.68c.68 0 1.18-.6 1.09-1.27C21.27 5.61 16.97 2 12 2zm0 18c-2.21 0-4.21-1.45-4.83-3.5h9.66C16.21 18.55 14.21 20 12 20z" />
-                    </svg>
+                    <HiOutlineSparkles className="w-5 h-5" />
                   ) : cat.id === 2 ? (
-                    <svg
-                      width="20"
-                      height="20"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M12 2a7 7 0 0 0-7 7c0 3.87 3.13 7 7 7s7-3.13 7-7a7 7 0 0 0-7-7zm0 16c-4.42 0-8 3.58-8 8h16c0-4.42-3.58-8-8-8z" />
-                    </svg>
+                    <HiOutlineCake className="w-5 h-5" />
                   ) : (
-                    <svg
-                      width="20"
-                      height="20"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M12 2a5 5 0 0 1 5 5c0 2.76-2.24 5-5 5s-5-2.24-5-5a5 5 0 0 1 5-5zm0 14c-3.31 0-6 2.69-6 6h12c0-3.31-2.69-6-6-6z" />
-                    </svg>
+                    <HiOutlineUser className="w-5 h-5" />
                   )}
                 </div>
                 <h3 className="text-xl font-bold text-gray-900">{cat.name}</h3>

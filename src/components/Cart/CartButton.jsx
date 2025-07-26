@@ -58,15 +58,15 @@ export default function CartButton() {
    * ยืนยันคำสั่งซื้อและไปหน้าชำระเงิน
    */
   const handleOrderConfirmation = () => {
+    console.log('Cart items before order:', cart);
     if (cart.length > 0) {
-      // บันทึกข้อมูลตะกร้าใน localStorage เพื่อส่งไปหน้าสั่งซื้อ
-      localStorage.setItem("foody_order", JSON.stringify(cart));
-      
-      // ล้างตะกร้าหลังจากยืนยันคำสั่งซื้อ
-      clearCart();
+      // ปิด modal ก่อน
+      setIsModalOpen(false);
       
       // ไปหน้าสั่งซื้อ
-      navigateTo("/orders");
+      navigateTo("/order");
+    } else {
+      console.log('No items in cart');
     }
   };
 

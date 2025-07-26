@@ -1,5 +1,6 @@
 
 import Link from "next/link";
+import { HiStar } from "react-icons/hi";
 
 export default function CardStore({ address, rating, image, name, id }) {
   return (
@@ -28,7 +29,7 @@ export default function CardStore({ address, rating, image, name, id }) {
             </p>
           </div>
           <span className="inline-flex items-center gap-1 bg-white/90 text-[#2563eb] text-xs font-bold px-3 py-1 rounded-full shadow w-fit">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 24 24" className="inline-block mr-1"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <HiStar className="w-4 h-4 text-yellow-400" />
             {rating}
           </span>
         </div>

@@ -16,7 +16,10 @@ const geistMono = Geist_Mono({
 });
 
 import { AppProviders } from "@/context/AppProviders";
+import { FilterProvider } from "@/context/FilterContext";
 import ClientOnly from "@/components/ClientOnly";
+import Navbar from "@/components/Layout/Navbar";
+import { stores } from "@/data/stores";
 
 export default function RootLayout({ children }) {
   return (
@@ -24,12 +27,15 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white`}
       >
-        <AppProviders>
-          {children}
-          <ClientOnly>
-            <CartButton />
-          </ClientOnly>
-        </AppProviders>
+        <FilterProvider>
+          <AppProviders>
+            <Navbar />
+            {children}
+            <ClientOnly>
+              <CartButton />
+            </ClientOnly>
+          </AppProviders>
+        </FilterProvider>
       </body>
     </html>
   );
