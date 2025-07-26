@@ -1,32 +1,11 @@
 import React from "react";
+import ModernButton from "./ModernButton";
 
 const NavigationButtons = () => {
   return (
     <div style={{ display: "flex", gap: 8 }}>
-      <button
-        onClick={() => window.history.back()}
-        style={{
-          padding: "8px 16px",
-          borderRadius: 4,
-          border: "1px solid #ccc",
-          background: "#fff",
-          cursor: "pointer",
-        }}
-      >
-        Prev
-      </button>
-      <button
-        onClick={() => window.history.forward()}
-        style={{
-          padding: "8px 16px",
-          borderRadius: 4,
-          border: "1px solid #ccc",
-          background: "#fff",
-          cursor: "pointer",
-        }}
-      >
-        Next
-      </button>
+      <ModernButton onClick={() => window.history.back()} value={"Prev"} />
+      <ModernButton onClick={() => window.history.forward()} value={"Next"} />
     </div>
   );
 };

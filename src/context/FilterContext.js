@@ -6,11 +6,11 @@ export const FilterContext = createContext();
 export function FilterProvider({ children }) {
   const [search, setSearch] = useState("");
   const [location, setLocation] = useState("");
-  // treat 'ทั้งหมด' as '' for filtering
-  const [selectedCategory, setSelectedCategory] = useState("");
+  // default filter เป็น 'ทั้งหมด'
+  const [selectedCategory, setSelectedCategory] = useState("ทั้งหมด");
 
   const filteredStores = useMemo(() => {
-    // treat selectedCategory === '' as "ทั้งหมด"
+    // ถ้า selectedCategory === 'ทั้งหมด' ให้แสดงทุกร้าน
     return stores.filter((store) => {
       const matchName = store.name.toLowerCase().includes(search.toLowerCase());
       const matchLocation = store.address

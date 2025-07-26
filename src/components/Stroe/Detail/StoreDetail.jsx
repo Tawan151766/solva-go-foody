@@ -10,16 +10,17 @@ import { HiStar, HiLocationMarker, HiPhone } from "react-icons/hi";
 export default function StoreDetail({ store }) {
   // Google Maps API Key (ในการใช้งานจริงควรเก็บใน environment variables)
   const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
-  
+
   // ตรวจสอบว่ามี API Key หรือไม่
-  const hasApiKey = GOOGLE_MAPS_API_KEY && GOOGLE_MAPS_API_KEY !== "YOUR_API_KEY_HERE";
+  const hasApiKey =
+    GOOGLE_MAPS_API_KEY && GOOGLE_MAPS_API_KEY !== "YOUR_API_KEY_HERE";
 
   /**
    * เปิดแอป Google Maps สำหรับนำทาง
    */
   const handleNavigation = () => {
     const url = `https://www.google.com/maps/dir/?api=1&destination=${store.lat},${store.lng}`;
-    window.open(url, '_blank');
+    window.open(url, "_blank");
   };
 
   /**
@@ -79,7 +80,7 @@ export default function StoreDetail({ store }) {
 
           {/* Action Buttons */}
           <div className="flex gap-3">
-            <button 
+            <button
               onClick={handleCall}
               className="flex-1 bg-[#2563eb] hover:bg-[#1d4ed8] text-white font-semibold py-3 px-4 rounded-xl transition-colors duration-200 shadow-lg"
             >
@@ -88,7 +89,7 @@ export default function StoreDetail({ store }) {
                 โทร
               </div>
             </button>
-            <button 
+            <button
               onClick={handleNavigation}
               className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-4 rounded-xl transition-colors duration-200"
             >
@@ -112,27 +113,26 @@ export default function StoreDetail({ store }) {
 
         {/* Maps Container */}
         <div className="h-64">
-          {hasApiKey ? (
-            // ใช้ Google Maps แบบ Interactive เมื่อมี API Key
-            <GoogleMapsScript apiKey={GOOGLE_MAPS_API_KEY}>
-              <GoogleMap
+          <GoogleMapsScript
+            apiKey={GOOGLE_MAPS_API_KEY}
+            fallback={
+              <StaticMap
                 lat={store.lat}
                 lng={store.lng}
                 title={store.name}
                 address={store.address}
-                zoom={16}
+                zoom={15}
               />
-            </GoogleMapsScript>
-          ) : (
-            // ใช้ Static Map เมื่อไม่มี API Key
-            <StaticMap
+            }
+          >
+            <GoogleMap
               lat={store.lat}
               lng={store.lng}
               title={store.name}
               address={store.address}
-              zoom={15}
+              zoom={16}
             />
-          )}
+          </GoogleMapsScript>
         </div>
       </div>
     </div>

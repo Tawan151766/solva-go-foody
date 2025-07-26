@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
  * Component สำหรับโหลด Google Maps JavaScript API
  * ใช้ครอบ components ที่ต้องการใช้ Google Maps
  */
-export default function GoogleMapsScript({ children, apiKey }) {
+export default function GoogleMapsScript({ children, apiKey, fallback = null }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isError, setIsError] = useState(false);
 
@@ -53,21 +53,24 @@ export default function GoogleMapsScript({ children, apiKey }) {
     };
   }, [apiKey]);
 
+
   // แสดง loading state
   if (!isLoaded && !isError) {
     return (
-      <div className="flex items-center justify-center p-8">
-        <div className="text-center">
-          <div className="w-8 h-8 border-2 border-[#2563eb] border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
-          <p className="text-gray-600 text-sm">กำลังโหลด Google Maps...</p>
+      fallback ? fallback : (
+        <div className="flex items-center justify-center p-8">
+          <div className="text-center">
+            <div className="w-8 h-8 border-2 border-[#2563eb] border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+            <p className="text-gray-600 text-sm">กำลังโหลด Google Maps...</p>
+          </div>
         </div>
-      </div>
+      )
     );
   }
 
-  // แสดง error state
+  // แสดง fallback เมื่อ error
   if (isError) {
-    return (
+    return fallback ? fallback : (
       <div className="flex items-center justify-center p-8">
         <div className="text-center">
           <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">

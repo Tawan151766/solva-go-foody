@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useCart } from '@/context/CartContext';
 import { HiCheck, HiClock, HiEye, HiClipboardCopy } from 'react-icons/hi';
 
 export default function PaymentSuccess({ 
@@ -6,6 +7,7 @@ export default function PaymentSuccess({
   selectedTotal, 
   onBackToHome 
 }) {
+  const { clearCart } = useCart();
   const [paymentStatus, setPaymentStatus] = useState('checking'); // checking, approved, completed
   const [copied, setCopied] = useState(false);
 
@@ -24,6 +26,13 @@ export default function PaymentSuccess({
       clearTimeout(timer2);
     };
   }, []);
+
+  // ล้างตะกร้าทันทีที่ paymentStatus เป็น completed
+  useEffect(() => {
+    if (paymentStatus === 'completed') {
+      clearCart();
+    }
+  }, [paymentStatus, clearCart]);
 
   const copyTrackingNumber = async () => {
     try {
