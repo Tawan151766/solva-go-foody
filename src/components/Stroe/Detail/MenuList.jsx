@@ -1,6 +1,6 @@
 "use client";
 import { useCart } from "@/context/CartContext";
-import { HiOutlineSparkles, HiOutlineCake, HiOutlineUser } from "react-icons/hi";
+// import { HiOutlineSparkles, HiOutlineCake, HiOutlineUser } from "react-icons/hi";
 import { useState } from "react";
 
 /**
@@ -83,7 +83,6 @@ export default function MenuList({ menuCategories, menus, store }) {
       <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
         <div className="p-6 border-b border-gray-100">
           <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-            <HiOutlineSparkles className="w-6 h-6 text-[#2563eb]" />
             เมนูร้านอาหาร
           </h2>
         </div>
@@ -91,15 +90,7 @@ export default function MenuList({ menuCategories, menus, store }) {
           {menuCategories.map((cat) => (
             <div key={cat.id} className="mb-8 last:mb-0">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] rounded-full flex items-center justify-center shadow-lg">
-                  {cat.id === 1 ? (
-                    <HiOutlineSparkles className="w-5 h-5" />
-                  ) : cat.id === 2 ? (
-                    <HiOutlineCake className="w-5 h-5" />
-                  ) : (
-                    <HiOutlineUser className="w-5 h-5" />
-                  )}
-                </div>
+                {/* ไอคอนประเภทอาหารถูกลบออก */}
                 <h3 className="text-xl font-bold text-gray-900">{cat.name}</h3>
               </div>
 
