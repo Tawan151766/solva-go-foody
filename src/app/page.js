@@ -5,6 +5,7 @@ import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 import CardStore from "@/components/Stroe/CardStore";
 import EmptyState from "@/components/EmptyState";
 import { FilterContext } from "@/context/FilterContext";
+import { useEffect } from "react";
 
 /**
  * main app - store list
@@ -14,12 +15,25 @@ function HomePage() {
   // Use filter from FilterContext (global state)
   const { filteredStores } = useContext(FilterContext);
   const [page, setPage] = useState(0);
-  const pageSize = 4;
+  const [pageSize, setPageSize] = useState(4);
+  // Responsive pageSize: md = 3, default = 4
+  useEffect(() => {
+    function handleResize() {
+      if (window.matchMedia('(min-width: 768px) and (max-width: 1279px)').matches) {
+        setPageSize(3);
+      } else {
+        setPageSize(4);
+      }
+    }
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   const totalPages = Math.ceil(filteredStores.length / pageSize);
   const pagedStores = filteredStores.slice(page * pageSize, (page + 1) * pageSize);
 
   return (
-    <div className="space-y-8 relative">
+    <div className="space-y-8 relative md:px-7">
       {/* store list */}
       <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 xl:gap-8">
         {filteredStores.length === 0 ? (
