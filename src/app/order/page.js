@@ -1,156 +1,81 @@
+
 "use client";
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
+import OrderSuccessDetail from '@/components/Order/OrderSuccessDetail';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
-import OrderSummary from '@/components/Order/OrderSummary';
-import DeliveryInfo from '@/components/Order/DeliveryInfo';
-import PaymentOptions from '@/components/Order/PaymentOptions';
-import PaymentUpload from '@/components/Order/PaymentUpload';
-import PaymentSuccess from '@/components/Order/PaymentSuccess';
 
-/**
- * หน้าสำหรับจัดการคำสั่งซื้อและการชำระเงิน
- * มีขั้นตอน: สรุปคำสั่งซื้อ → เลือกการชำระเงิน → อัปโหลดหลักฐาน → แสดงผลสำเร็จ
- */
 export default function OrderPage() {
   const router = useRouter();
   const { cart, clearCart, isHydrated } = useCart();
-  
-  // States สำหรับจัดการขั้นตอนต่างๆ
-  const [currentStep, setCurrentStep] = useState('summary'); // summary, delivery, payment, upload, success
-  const [selectedStores, setSelectedStores] = useState(new Set());
-  const [deliveryInfo, setDeliveryInfo] = useState(null);
-  const [paymentMethod, setPaymentMethod] = useState('');
-  const [trackingNumber, setTrackingNumber] = useState('');
+  const [customerName, setCustomerName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [address, setAddress] = useState('');
+  const [note, setNote] = useState('');
+  const [isOrderCreating, setIsOrderCreating] = useState(false);
+  const [orderSuccess, setOrderSuccess] = useState(false);
+  const [orderId, setOrderId] = useState(null);
+  const [errorMsg, setErrorMsg] = useState('');
 
-  // จัดกลุ่มสินค้าตามร้าน - ใช้ useMemo เพื่อป้องกัน re-calculation ที่ไม่จำเป็น
-  const grouped = useMemo(() => {
-    return cart.reduce((acc, item) => {
-      const storeId = item.storeId;
-      if (!acc[storeId]) {
-        acc[storeId] = {
-          storeName: item.storeName,
-          items: [],
-          total: 0
-        };
-      }
-      acc[storeId].items.push(item);
-      acc[storeId].total += item.price * item.quantity;
-      return acc;
-    }, {});
-  }, [cart]);
+  // ใช้ร้านเดียวใน cart เท่านั้น (cart มีได้แค่ร้านเดียว)
+  const storeId = cart[0]?.storeId || null;
+  const storeName = cart[0]?.storeName || '';
+  const items = cart.map(item => ({
+    menuId: item.menuId,
+    quantity: item.quantity,
+    price: item.price
+  }));
+  const selectedTotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-  // คำนวณยอดรวมของร้านที่เลือก
-  const selectedTotal = useMemo(() => {
-    return Array.from(selectedStores).reduce((total, storeId) => {
-      return total + (grouped[storeId]?.total || 0);
-    }, 0);
-  }, [selectedStores, grouped]);
-
-  // เลือกร้านทั้งหมดเมื่อมีการเปลี่ยนแปลงของ cart เท่านั้น
-  useEffect(() => {
-    console.log('Cart data:', cart);
-    console.log('Grouped data:', grouped);
-    const allStoreIds = Object.keys(grouped);
-    
-    // เช็คว่า selectedStores ปัจจุบันต่างจาก allStoreIds หรือไม่
-    const currentStoreIds = Array.from(selectedStores);
-    const hasChanged = allStoreIds.length !== currentStoreIds.length || 
-                      !allStoreIds.every(id => selectedStores.has(id));
-    
-    if (hasChanged && allStoreIds.length > 0) {
-      setSelectedStores(new Set(allStoreIds));
-    }
-  }, [cart]); // เอา grouped ออกจาก dependencies
-
-  // ถ้าไม่มีสินค้าในตะกร้า ให้กลับไปหน้าหลัก (หลังจากโหลดเสร็จ)
-  useEffect(() => {
-    if (!isHydrated) return; // รอให้โหลดข้อมูลก่อน
-    
-    if (cart.length === 0) {
-      console.log('No items in cart, redirecting to home');
-      router.push('/');
-    }
-  }, [cart, router, isHydrated]);
-
-  // จัดการการเลือกร้าน
-  const handleStoreSelection = (storeId, isSelected) => {
-    const newSelected = new Set(selectedStores);
-    if (isSelected) {
-      newSelected.add(storeId);
-    } else {
-      newSelected.delete(storeId);
-    }
-    setSelectedStores(newSelected);
+  const validateForm = () => {
+    if (!customerName.trim()) return false;
+    if (!phone.trim()) return false;
+    if (!address.trim()) return false;
+    // phone: only digits, length 10
+    const phoneRegex = /^[0-9]{10}$/;
+    if (!phoneRegex.test(phone.replace(/[-\s]/g, ''))) return false;
+    return true;
   };
 
-  // เลือกร้านทั้งหมด
-  const handleSelectAll = () => {
-    const allStoreIds = Object.keys(grouped);
-    const allSelected = selectedStores.size === allStoreIds.length;
-    
-    if (allSelected) {
-      setSelectedStores(new Set());
-    } else {
-      setSelectedStores(new Set(allStoreIds));
-    }
-  };
-
-  // ไปขั้นตอนกรอกข้อมูลจัดส่ง
-  const handleProceedToDelivery = () => {
-    if (selectedStores.size === 0) {
-      alert('กรุณาเลือกร้านอาหารอย่างน้อย 1 ร้าน');
+  const handleCreateOrder = async () => {
+    if (!storeId || items.length === 0) return;
+    if (!validateForm()) {
+      setErrorMsg('กรุณากรอกข้อมูลให้ครบถ้วนและถูกต้อง');
       return;
     }
-    setCurrentStep('delivery');
-  };
-
-  // ไปขั้นตอนเลือกการชำระเงิน
-  const handleProceedToPayment = (deliveryData) => {
-    setDeliveryInfo(deliveryData);
-    setCurrentStep('payment');
-  };
-
-  // ไปขั้นตอนอัปโหลดหลักฐาน
-  const handlePaymentMethodSelected = (method) => {
-    setPaymentMethod(method);
-    setCurrentStep('upload');
-  };
-
-  // เสร็จสิ้นการชำระเงิน
-  const handlePaymentComplete = (trackingNum) => {
-    setTrackingNumber(trackingNum);
-    setCurrentStep('success');
-    
-    // ลบสินค้าที่สั่งซื้อแล้วออกจากตะกร้า
-    const selectedItems = cart.filter(item => selectedStores.has(item.storeId));
-    selectedItems.forEach(item => {
-      // ในการใช้งานจริงอาจต้องลบทีละรายการ
-    });
-  };
-
-  // กลับหน้าหลัก
-  const handleBackToHome = () => {
-    clearCart();
-    router.push('/');
-  };
-
-  // กลับขั้นตอนก่อนหน้า
-  const handleBack = () => {
-    switch (currentStep) {
-      case 'payment':
-        setCurrentStep('summary');
-        break;
-      case 'upload':
-        setCurrentStep('payment');
-        break;
-      default:
-        break;
+    setIsOrderCreating(true);
+    setErrorMsg('');
+    const payload = {
+      storeId,
+      deliveryAddress: address,
+      paymentMethod: null,
+      slipUrl: '',
+      items,
+      customerName: customerName.trim(),
+      phone: phone.trim(),
+      note: note.trim()
+    };
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/orders`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data?.data?.order?.id) {
+        setOrderId(data.data.order.id);
+        setOrderSuccess(true);
+        clearCart();
+      } else {
+        setErrorMsg('ไม่สามารถสร้างออเดอร์ได้');
+      }
+    } catch (err) {
+      setErrorMsg('เกิดข้อผิดพลาดในการสร้างออเดอร์');
     }
+    setIsOrderCreating(false);
   };
 
-  // แสดง loading ขณะรอข้อมูลจาก localStorage
   if (!isHydrated) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -162,7 +87,7 @@ export default function OrderPage() {
     );
   }
 
-  if (cart.length === 0) {
+  if (cart.length === 0 && !orderSuccess) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -179,96 +104,85 @@ export default function OrderPage() {
     );
   }
 
+  if (orderSuccess) {
+    return (
+      <OrderSuccessDetail
+        open={orderSuccess}
+        orderId={orderId}
+        onClose={() => setOrderSuccess(false)}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="container mx-auto px-4">
-        {/* Progress Indicator */}
-        <div className="max-w-2xl mx-auto mb-8">
-          <div className="flex items-center justify-between">
-            {[
-              { key: 'summary', label: 'สรุปคำสั่งซื้อ', step: 1 },
-              { key: 'payment', label: 'เลือกการชำระเงิน', step: 2 },
-              { key: 'upload', label: 'อัปโหลดหลักฐาน', step: 3 },
-              { key: 'success', label: 'เสร็จสิ้น', step: 4 }
-            ].map((item, index) => (
-              <div key={item.key} className="flex items-center">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-                  currentStep === item.key 
-                    ? 'bg-[#2563eb] text-white' 
-                    : ['summary', 'payment', 'upload'].indexOf(currentStep) > ['summary', 'payment', 'upload'].indexOf(item.key)
-                    ? 'bg-green-500 text-white'
-                    : 'bg-gray-200 text-gray-500'
-                }`}>
-                  {item.step}
-                </div>
-                <span className={`ml-2 text-sm font-medium ${
-                  currentStep === item.key ? 'text-[#2563eb]' : 'text-gray-500'
-                }`}>
-                  {item.label}
-                </span>
-                {index < 3 && (
-                  <div className={`w-8 h-0.5 mx-4 ${
-                    ['summary', 'payment', 'upload'].indexOf(currentStep) > index
-                      ? 'bg-green-500'
-                      : 'bg-gray-200'
-                  }`} />
-                )}
-              </div>
+        <div className="max-w-xl mx-auto bg-white rounded-xl shadow p-6">
+          <h2 className="text-xl font-bold mb-4">{storeName ? `ร้าน: ${storeName}` : 'ไม่มีร้านอาหาร'}</h2>
+          <ul className="mb-4">
+            {items.map((item, idx) => (
+              <li key={idx} className="flex justify-between py-1">
+                <span>เมนู {item.menuId}</span>
+                <span>x{item.quantity}</span>
+                <span>{item.price} บาท</span>
+              </li>
             ))}
+          </ul>
+          <div className="font-bold mb-4">รวม {selectedTotal} บาท</div>
+
+          <div className="mb-4">
+            <label className="block text-sm font-semibold text-gray-700 mb-2">ชื่อผู้รับ *</label>
+            <input
+              type="text"
+              value={customerName}
+              onChange={e => setCustomerName(e.target.value)}
+              placeholder="กรอกชื่อผู้รับอาหาร"
+              className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2563eb] focus:border-transparent"
+            />
           </div>
+          <div className="mb-4">
+            <label className="block text-sm font-semibold text-gray-700 mb-2">เบอร์โทรศัพท์ *</label>
+            <input
+              type="tel"
+              value={phone}
+              onChange={e => setPhone(e.target.value)}
+              placeholder="0812345678"
+              maxLength="12"
+              className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2563eb] focus:border-transparent"
+            />
+            <p className="text-xs text-gray-500 mt-1">รูปแบบ: 0812345678</p>
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-semibold text-gray-700 mb-2">ที่อยู่จัดส่ง *</label>
+            <textarea
+              value={address}
+              onChange={e => setAddress(e.target.value)}
+              placeholder="กรอกที่อยู่จัดส่งแบบละเอียด"
+              rows="2"
+              className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2563eb] focus:border-transparent resize-none"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-semibold text-gray-700 mb-2">หมายเหตุ (ไม่บังคับ)</label>
+            <textarea
+              value={note}
+              onChange={e => setNote(e.target.value)}
+              placeholder="หมายเหตุสำหรับร้านอาหารหรือผู้ส่ง"
+              rows="2"
+              className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2563eb] focus:border-transparent resize-none"
+            />
+          </div>
+
+          {errorMsg && <div className="text-red-600 mb-4">{errorMsg}</div>}
+
+          <button
+            className="w-full bg-[#2563eb] hover:bg-[#1d4ed8] text-white px-6 py-3 rounded-xl font-semibold mt-2"
+            onClick={handleCreateOrder}
+            disabled={isOrderCreating || !validateForm()}
+          >
+            {isOrderCreating ? 'กำลังสั่งซื้อ...' : 'ยืนยันสั่งซื้อ'}
+          </button>
         </div>
-
-        {/* Content based on current step */}
-
-        {currentStep === 'summary' && (
-          <OrderSummary
-            grouped={grouped}
-            selectedStores={selectedStores}
-            onStoreSelection={handleStoreSelection}
-            onSelectAll={handleSelectAll}
-            onProceedToDelivery={handleProceedToDelivery}
-            selectedTotal={selectedTotal}
-          />
-        )}
-
-        {currentStep === 'delivery' && (
-          <DeliveryInfo
-            onBack={() => setCurrentStep('summary')}
-            onContinue={handleProceedToPayment}
-            selectedTotal={selectedTotal}
-            selectedStores={selectedStores}
-            grouped={grouped}
-          />
-        )}
-
-        {currentStep === 'payment' && (
-          <PaymentOptions
-            selectedTotal={selectedTotal}
-            paymentMethod={paymentMethod}
-            onPaymentMethodChange={setPaymentMethod}
-            onPayment={handlePaymentMethodSelected}
-            onBack={handleBack}
-            selectedStores={selectedStores}
-            grouped={grouped}
-          />
-        )}
-
-        {currentStep === 'upload' && (
-          <PaymentUpload
-            paymentMethod={paymentMethod}
-            selectedTotal={selectedTotal}
-            onBack={handleBack}
-            onPaymentComplete={handlePaymentComplete}
-          />
-        )}
-
-        {currentStep === 'success' && (
-          <PaymentSuccess
-            trackingNumber={trackingNumber}
-            selectedTotal={selectedTotal}
-            onBackToHome={handleBackToHome}
-          />
-        )}
       </div>
     </div>
   );

@@ -6,36 +6,66 @@
 // รายการร้านอาหารทั้งหมด
 export const stores = [
   {
-    id: 1,
-    name: "Bang Sue Thai Noodles",
-    address: "101/2 ถนนเตชะวณิช แขวงบางซื่อ เขตบางซื่อ กรุงเทพฯ",
-    rating: 4.5,
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCwp1GvQB3J0KABfdKjrYaPmoSqoogXithiGJ-ISvyCUqTsdK3LCQs0mtjp627s3sI8iKdKtjZYZXKYTRAv6ugFeClcV5ExaiTroURdi1VD9roLlNadVX8otken93hDJiT7Vr4GWN3Ff4K3nebO43zsrfN0kUqaYApR7CqBBhaO6T7zip7pU21oNikO4wuncPldf431Szy0wR5DOScW2AyimrPukU9Dngudwa9Pce7iuwcj3f7kVpacT3zT4CtLSJaILgmHSAATxPtp",
-    lat: 13.8131,    // พิกัดละติจูด
-    lng: 100.5372,   // พิกัดลองจิจูด
-    category: "ก๋วยเตี๋ยว",
+    "id": 1,
+    "name": "Bang Sue Thai Noodles",
+    "address": "101/2 ถนนเตชะวณิช แขวงบางซื่อ เขตบางซื่อ กรุงเทพฯ",
+    "rating": 4.5,
+    "image": "https://lh5.googleusercontent.com/p/AF1QipPGfCg_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0=w400-h300-k-no",
+    "lat": 13.8131,
+    "lng": 100.5372,
+    "category": "ก๋วยเตี๋ยว",
+    "nationality": "ไทย",
+    "openingHours": "08:00 - 20:00"
   },
   {
-    id: 2,
-    name: "Roti Bang Sue",
-    address: "88/9 ซอยประชาชื่น 27 เขตบางซื่อ กรุงเทพฯ",
-    rating: 4.2,
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCwp1GvQB3J0KABfdKjrYaPmoSqoogXithiGJ-ISvyCUqTsdK3LCQs0mtjp627s3sI8iKdKtjZYZXKYTRAv6ugFeClcV5ExaiTroURdi1VD9roLlNadVX8otken93hDJiT7Vr4GWN3Ff4K3nebO43zsrfN0kUqaYApR7CqBBhaO6T7zip7pU21oNikO4wuncPldf431Szy0wR5DOScW2AyimrPukU9Dngudwa9Pce7iuwcj3f7kVpacT3zT4CtLSJaILgmHSAATxPtp",
-    lat: 13.8178,
-    lng: 100.5325,
-    category: "โรตี",
+    "id": 2,
+    "name": "Siam Square Café",
+    "address": "258/1-3 ซอยจุฬา 42 แขวงวังใหม่ เขตปทุมวัน กรุงเทพฯ",
+    "rating": 4.2,
+    "image": "https://lh5.googleusercontent.com/p/AF1QipMs-fV7x_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2_2=w400-h300-k-no",
+    "lat": 13.7447,
+    "lng": 100.5348,
+    "category": "คาเฟ่",
+    "nationality": "นานาชาติ",
+    "openingHours": "07:00 - 22:00"
   },
   {
-    id: 3,
-    name: "Kao Ka Moo Express",
-    address: "ใต้สถานี MRT บางซื่อ ทางออก 3",
-    rating: 4.7,
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCwp1GvQB3J0KABfdKjrYaPmoSqoogXithiGJ-ISvyCUqTsdK3LCQs0mtjp627s3sI8iKdKtjZYZXKYTRAv6ugFeClcV5ExaiTroURdi1VD9roLlNadVX8otken93hDJiT7Vr4GWN3Ff4K3nebO43zsrfN0kUqaYApR7CqBBhaO6T7zip7pU21oNikO4wuncPldf431Szy0wR5DOScW2AyimrPukU9Dngudwa9Pce7iuwcj3f7kVpacT3zT4CtLSJaILgmHSAATxPtp",
-    lat: 13.8149,
-    lng: 100.537,
-    category: "ข้าวขาหมู",
+    "id": 3,
+    "name": "Sukhumvit Japanese Restaurant",
+    "address": "88/8 ซอยสุขุมวิท 23 แขวงคลองเตยเหนือ เขตวัฒนา กรุงเทพฯ",
+    "rating": 4.7,
+    "image": "https://lh5.googleusercontent.com/p/AF1QipOYj_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9_9=w400-h300-k-no",
+    "lat": 13.7371,
+    "lng": 100.5630,
+    "category": "อาหารญี่ปุ่น",
+    "nationality": "ญี่ปุ่น",
+    "openingHours": "11:00 - 14:00, 17:00 - 22:00"
   },
-];
+  {
+    "id": 4,
+    "name": "Chinatown Dim Sum",
+    "address": "123 ถนนเยาวราช แขวงจักรวรรดิ เขตสัมพันธวงศ์ กรุงเทพฯ",
+    "rating": 4.0,
+    "image": "https://lh5.googleusercontent.com/p/AF1QipPk_hZ1z_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1=w400-h300-k-no",
+    "lat": 13.7408,
+    "lng": 100.5049,
+    "category": "ติ่มซำ",
+    "nationality": "จีน",
+    "openingHours": "09:00 - 18:00"
+  },
+  {
+    "id": 5,
+    "name": "Riverside Seafood",
+    "address": "77/4 ซอยเจริญนคร 10 แขวงคลองต้นไทร เขตคลองสาน กรุงเทพฯ",
+    "rating": 4.6,
+    "image": "https://lh5.googleusercontent.com/p/AF1QipRj_oW_o_o_o_o_o_o_o_o_o_o_o_o_o_o_o_o_o_o_o_o=w400-h300-k-no",
+    "lat": 13.7225,
+    "lng": 100.4920,
+    "category": "อาหารทะเล",
+    "nationality": "ไทย",
+    "openingHours": "16:00 - 23:00"
+  }
+]
 
 // หมวดหมู่ร้านอาหารสำหรับการกรอง
 export const categories = [

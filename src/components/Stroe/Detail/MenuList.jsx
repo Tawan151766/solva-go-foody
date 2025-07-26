@@ -63,9 +63,9 @@ export default function MenuList({ menuCategories, menus, store }) {
    */
   const handleAdd = () => {
     const finalPrice = calculateTotalPrice() / quantity; // ราคาต่อหน่วย
-    
     addToCart({
-      ...modalMenu,
+      menuId: modalMenu.id, // อิง id เมนูจริง
+      name: modalMenu.name,
       price: finalPrice, // ราคาที่รวมตัวเลือกแล้ว
       selectedLevel,
       selectedMeat,
@@ -73,6 +73,7 @@ export default function MenuList({ menuCategories, menus, store }) {
       note,
       storeId: store?.id,
       storeName: store?.name,
+      // ...modalMenu, // ถ้าต้องการ field อื่นเพิ่ม
     });
     setModalOpen(false);
   };

@@ -1,91 +1,91 @@
-
 "use client";
 import { createContext, useContext, useState, useEffect } from "react";
 
-// สร้าง Context สำหรับจัดการตะกร้าสินค้า
+
 const CartContext = createContext();
 
-/**
- * Provider สำหรับจัดการสถานะตะกร้าสินค้า
- * ใช้ครอบ components ที่ต้องการเข้าถึงข้อมูลตะกร้า
- */
+
 export function CartProvider({ children }) {
-  // รายการสินค้าในตะกร้า
+
   const [cartItems, setCartItems] = useState([]);
-  
-  // สถานะว่าแอปโหลดเสร็จแล้วหรือยัง (ป้องกัน hydration error)
+
+  // handle hydration error
   const [isAppReady, setIsAppReady] = useState(false);
 
-  /**
-   * เมื่อ component โหลดเสร็จ (client-side)
-   * จะตั้งสถานะว่าแอปพร้อมใช้งานและโหลดข้อมูลจาก localStorage
-   */
   useEffect(() => {
     setIsAppReady(true);
-    
-    // โหลดข้อมูลตะกร้าจาก localStorage
+
+    // get data from localStorage
     try {
-      const savedCartItems = localStorage.getItem('foody_cart');
+      const savedCartItems = localStorage.getItem("foody_cart");
       if (savedCartItems) {
         const parsedItems = JSON.parse(savedCartItems);
         setCartItems(parsedItems);
       }
     } catch (error) {
-      console.error('Error loading cart from localStorage:', error);
+      console.error("Error loading cart from localStorage:", error);
     }
   }, []);
 
   /**
-   * บันทึกข้อมูลตะกร้าลง localStorage เมื่อมีการเปลี่ยนแปลง
+   * save to localStorage
    */
   useEffect(() => {
     if (isAppReady) {
       try {
-        localStorage.setItem('foody_cart', JSON.stringify(cartItems));
+        localStorage.setItem("foody_cart", JSON.stringify(cartItems));
       } catch (error) {
-        console.error('Error saving cart to localStorage:', error);
+        console.error("Error saving cart to localStorage:", error);
       }
     }
   }, [cartItems, isAppReady]);
 
   /**
-   * เพิ่มสินค้าลงตะกร้า
-   * @param {Object} newItem - ข้อมูลสินค้าที่จะเพิ่ม
+   * addItemToCart
+   * @param {Object} newItem 
    */
   const addItemToCart = (newItem) => {
-    // สร้าง ID ที่ไม่ซ้ำกันสำหรับสินค้าแต่ละรายการ
-    const itemWithUniqueId = { 
-      ...newItem, 
-      id: Date.now() + Math.random() 
-    };
-    
-    setCartItems((currentItems) => [...currentItems, itemWithUniqueId]);
+    // ตรวจสอบว่ามีข้อมูลเมนูจริงครบถ้วน
+    if (!newItem.menuId || !newItem.name || !newItem.price || !newItem.storeId) {
+      console.warn('addItemToCart: ข้อมูลเมนูไม่ครบ ไม่เพิ่มเข้าตะกร้า', newItem);
+      return;
+    }
+    setCartItems((currentItems) => {
+      // ลบเมนูของร้านอื่นออก เหลือเฉพาะร้านที่เลือก
+      const filtered = currentItems.filter(item => item.storeId === newItem.storeId);
+      const itemWithUniqueId = {
+        ...newItem,
+        id: newItem.menuId,
+        uniqueCartId: Date.now() + Math.floor(Math.random() * 10000),
+      };
+      return [...filtered, itemWithUniqueId];
+    });
   };
 
   /**
-   * ลบสินค้าออกจากตะกร้า
-   * @param {string|number} itemId - ID ของสินค้าที่จะลบ
+   * removeItemFromCart
+   * @param {string|number} uniqueCartId - ใช้ uniqueCartId ใน cart
    */
-  const removeItemFromCart = (itemId) => {
-    setCartItems((currentItems) => 
-      currentItems.filter((item) => item.id !== itemId)
+  const removeItemFromCart = (uniqueCartId) => {
+    setCartItems((currentItems) =>
+      currentItems.filter((item) => item.uniqueCartId !== uniqueCartId)
     );
   };
 
   /**
-   * ล้างสินค้าทั้งหมดในตะกร้า
+   * clearAllItems
    */
   const clearAllItems = () => {
     setCartItems([]);
   };
 
-  // ข้อมูลที่จะส่งให้ components ที่ใช้ Context นี้
+  // for components that use this Context
   const cartContextValue = {
-    cart: cartItems,              // รายการสินค้าในตะกร้า
-    addToCart: addItemToCart,     // ฟังก์ชันเพิ่มสินค้า
-    removeFromCart: removeItemFromCart, // ฟังก์ชันลบสินค้า
-    clearCart: clearAllItems,     // ฟังก์ชันล้างตะกร้า
-    isHydrated: isAppReady        // สถานะว่าแอปพร้อมใช้งาน
+    cart: cartItems, // products in the cart
+    addToCart: addItemToCart, // a function to add a product
+    removeFromCart: removeItemFromCart, // a function to remove a product
+    clearCart: clearAllItems, // a function to clear all products
+    isHydrated: isAppReady, // state to check if the app is ready
   };
 
   return (
@@ -102,11 +102,11 @@ export function CartProvider({ children }) {
  */
 export function useCart() {
   const cartContext = useContext(CartContext);
-  
+
   // ตรวจสอบว่าใช้ Hook นี้ภายใน Provider หรือไม่
   if (!cartContext) {
-    throw new Error('useCart ต้องใช้ภายใน CartProvider เท่านั้น');
+    throw new Error("useCart ต้องใช้ภายใน CartProvider เท่านั้น");
   }
-  
+
   return cartContext;
 }

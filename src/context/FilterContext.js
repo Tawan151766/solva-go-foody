@@ -1,26 +1,39 @@
-import React, { createContext, useState, useMemo } from "react";
-import { categories, stores } from "@/data/stores";
+import React, { createContext, useState, useEffect } from "react";
+import { categories } from "@/data/stores";
 
 export const FilterContext = createContext();
 
 export function FilterProvider({ children }) {
   const [search, setSearch] = useState("");
   const [location, setLocation] = useState("");
-  // default filter เป็น 'ทั้งหมด'
   const [selectedCategory, setSelectedCategory] = useState("ทั้งหมด");
 
-  const filteredStores = useMemo(() => {
-    // ถ้า selectedCategory === 'ทั้งหมด' ให้แสดงทุกร้าน
-    return stores.filter((store) => {
-      const matchName = store.name.toLowerCase().includes(search.toLowerCase());
-      const matchLocation = store.address
-        .toLowerCase()
-        .includes(location.toLowerCase());
-      const matchCategory =
-        selectedCategory === "ทั้งหมด" || store.category === selectedCategory;
-      return matchName && matchLocation && matchCategory;
-    });
+  const [filteredStores, setFilteredStores] = useState([]);
+  const [debounced, setDebounced] = useState({ search, location, selectedCategory });
+
+  // debounce filter input
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebounced({ search, location, selectedCategory });
+    }, 800); // 800ms
+
+    return () => clearTimeout(handler);
   }, [search, location, selectedCategory]);
+
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (debounced.search) params.append('name', debounced.search);
+    if (debounced.location) params.append('address', debounced.location);
+    if (debounced.selectedCategory && debounced.selectedCategory !== 'ทั้งหมด')
+      params.append('category', debounced.selectedCategory);
+
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/stores?${params.toString()}`)
+      .then(res => res.json())
+      .then(data => {
+        setFilteredStores(data?.data?.restaurants || []);
+      })
+      .catch(() => setFilteredStores([]));
+  }, [debounced]);
 
   return (
     <FilterContext.Provider

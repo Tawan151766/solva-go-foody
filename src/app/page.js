@@ -6,17 +6,16 @@ import EmptyState from "@/components/EmptyState";
 import { FilterContext } from "@/context/FilterContext";
 
 /**
- * หน้าหลักของแอป - แสดงรายการร้านอาหาร
- * ผู้ใช้สามารถค้นหาและกรองร้านอาหารได้
+ * main app - store list
+ * Users can search and filter stores
  */
 function HomePage() {
-  // ใช้ filter จาก FilterContext (global state)
+  // Use filter from FilterContext (global state)
   const { filteredStores } = useContext(FilterContext);
 
   return (
     <div className="space-y-8">
-
-      {/* ส่วนแสดงผลร้านอาหาร */}
+      {/* store list */}
       <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 xl:grid-cols-4">
         {filteredStores.length === 0 ? (
           <EmptyState value="ไม่พบร้านอาหารที่ตรงกับการค้นหา" />
