@@ -24,6 +24,24 @@
 .DS_Store
 *.pem
 
+Thumbs.db
+Icon?
+*.log
+*.local
+*.sqlite
+*.sqlite3
+.idea/
+*.swp
+*.swo
+.ipynb_checkpoints/
+.vscode/
+dist/
+*.tgz
+*.exe
+*.dll
+*.bat
+*.cmd
+
 # debug
 npm-debug.log*
 yarn-debug.log*

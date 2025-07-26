@@ -16,7 +16,7 @@ export default function StoreDetailPage() {
   useEffect(() => {
     if (!params.id) return;
     setLoading(true);
-    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/stores/${params.id}`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/stores/${params.id}`)
       .then(res => res.json())
       .then(data => {
         setStore(data?.data?.restaurant || null);

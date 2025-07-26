@@ -27,7 +27,7 @@ export function FilterProvider({ children }) {
     if (debounced.selectedCategory && debounced.selectedCategory !== 'ทั้งหมด')
       params.append('category', debounced.selectedCategory);
 
-    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/stores?${params.toString()}`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/stores?${params.toString()}`)
       .then(res => res.json())
       .then(data => {
         setFilteredStores(data?.data?.restaurants || []);
