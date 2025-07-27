@@ -1,14 +1,17 @@
 "use client";
 
-
 import StoreDetail from "@/components/Stroe/Detail/StoreDetail";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import MenuList from "@/components/Stroe/Detail/MenuList";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { menuCategories } from "@/data/stores";
 
 export default function StoreDetailPage() {
+  const menuCategories = [
+    { id: 1, name: "ก๋วยเตี๋ยว" },
+    { id: 2, name: "ข้าว" },
+    { id: 3, name: "ของหวาน" },
+  ];
   const params = useParams();
   const [store, setStore] = useState(null);
   const [menus, setMenus] = useState([]);
@@ -18,8 +21,8 @@ export default function StoreDetailPage() {
     if (!params.id) return;
     setLoading(true);
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/stores/${params.id}`)
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         setStore(data?.data?.restaurant || null);
         setMenus(data?.data?.restaurant?.menus || []);
         setLoading(false);

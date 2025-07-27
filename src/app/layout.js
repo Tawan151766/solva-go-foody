@@ -21,7 +21,6 @@ import { ModalProvider } from "@/context/ModalContext";
 import { FilterProvider } from "@/context/FilterContext";
 import ClientOnly from "@/components/ClientOnly";
 import Navbar from "@/components/Layout/Navbar";
-import { stores } from "@/data/stores";
 
 export default function RootLayout({ children }) {
   return (

@@ -133,16 +133,20 @@ export default function Navbar() {
                 </div>
               </div>
               <div className="flex flex-wrap gap-2 w-full md:w-auto justify-center md:justify-end mt-2 md:mt-0">
-                {categories.map((cat) => (
-                  <ModernButton
-                    key={cat}
-                    value={cat}
-                    active={selectedCategory === cat}
-                    onClick={() =>
-                      setSelectedCategory && setSelectedCategory(cat)
-                    }
-                  />
-                ))}
+                <select
+                  value={selectedCategory}
+                  onChange={(e) =>
+                    setSelectedCategory && setSelectedCategory(e.target.value)
+                  }
+                 className="px-4 py-2 rounded-xl border border-[#e0e7ef] shadow-sm focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20 text-base w-full bg-white transition-all duration-150 appearance-none pr-10 text-[#2563eb] font-semibold"
+                >
+                  <option value="">เลือกประเภทอาหาร</option>
+                  {foodTypes.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
+                  ))}
+                </select>
               </div>
             </>
           )}
