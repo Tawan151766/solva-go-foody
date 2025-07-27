@@ -5,6 +5,7 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import MenuList from "@/components/Stroe/Detail/MenuList";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { fetchStoreById } from "@/lib/apiService";
 
 export default function StoreDetailPage() {
   const menuCategories = [
@@ -20,8 +21,7 @@ export default function StoreDetailPage() {
   useEffect(() => {
     if (!params.id) return;
     setLoading(true);
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/stores/${params.id}`)
-      .then((res) => res.json())
+    fetchStoreById(params.id)
       .then((data) => {
         setStore(data?.data?.restaurant || null);
         setMenus(data?.data?.restaurant?.menus || []);

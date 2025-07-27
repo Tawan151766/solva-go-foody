@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
+import { fetchStores } from "@/lib/apiService";
 
 export const FilterContext = createContext();
 const categories = ["ทั้งหมด", "ก๋วยเตี๋ยว", "โรตี", "ข้าวขาหมู"];
@@ -26,16 +27,14 @@ export function FilterProvider({ children }) {
   }, [search, location, selectedCategory, nationality]);
 
   useEffect(() => {
-    const params = new URLSearchParams();
-    if (debounced.search) params.append("name", debounced.search);
-    if (debounced.location) params.append("address", debounced.location);
+    const params = {};
+    if (debounced.search) params.name = debounced.search;
+    if (debounced.location) params.address = debounced.location;
     if (debounced.selectedCategory && debounced.selectedCategory !== "ทั้งหมด")
-      params.append("category", debounced.selectedCategory);
-    if (debounced.nationality)
-      params.append("nationality", debounced.nationality);
+      params.category = debounced.selectedCategory;
+    if (debounced.nationality) params.nationality = debounced.nationality;
 
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/stores?${params.toString()}`)
-      .then((res) => res.json())
+    fetchStores(params)
       .then((data) => {
         setFilteredStores(data?.data?.restaurants || []);
       })

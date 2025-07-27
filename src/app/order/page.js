@@ -4,6 +4,7 @@
 "use client";
 
 import LoadingSpinner from "@/components/LoadingSpinner";
+import { createOrder, fetchOrderById } from "@/lib/apiService";
 import { useState, useEffect } from 'react';
 import OrderSuccessDetail from '@/components/Order/OrderSuccessDetail';
 import { useRouter } from 'next/navigation';
@@ -60,20 +61,14 @@ export default function OrderPage() {
       note: note.trim()
     };
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      const data = await res.json();
+      const data = await createOrder(payload);
       if (data?.data?.order?.id) {
         // แปลง id เป็น base64 ก่อนส่งไปแสดงผลหรือค้นหา
         const orderId = data.data.order.id;
         const hashId = typeof window !== 'undefined' ? window.btoa(orderId) : orderId;
         // fetch order by id (uuid) (ยังใช้ id จริงในการ fetch)
         try {
-          const orderRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${orderId}`);
-          const orderData = await orderRes.json();
+          await fetchOrderById(orderId);
           // สามารถนำ orderData ไปใช้แสดงผลหรือเก็บใน state เพิ่มเติมได้
         } catch (e) {
           // กรณีดึง order ไม่สำเร็จ
