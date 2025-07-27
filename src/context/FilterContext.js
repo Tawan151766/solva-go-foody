@@ -7,18 +7,19 @@ export function FilterProvider({ children }) {
   const [search, setSearch] = useState("");
   const [location, setLocation] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("ทั้งหมด");
+  const [nationality, setNationality] = useState("");
 
   const [filteredStores, setFilteredStores] = useState([]);
-  const [debounced, setDebounced] = useState({ search, location, selectedCategory });
+  const [debounced, setDebounced] = useState({ search, location, selectedCategory, nationality });
 
   // debounce filter input
   useEffect(() => {
     const handler = setTimeout(() => {
-      setDebounced({ search, location, selectedCategory });
+      setDebounced({ search, location, selectedCategory, nationality });
     }, 800); // 800ms
 
     return () => clearTimeout(handler);
-  }, [search, location, selectedCategory]);
+  }, [search, location, selectedCategory, nationality]);
 
   useEffect(() => {
     const params = new URLSearchParams();
@@ -26,6 +27,7 @@ export function FilterProvider({ children }) {
     if (debounced.location) params.append('address', debounced.location);
     if (debounced.selectedCategory && debounced.selectedCategory !== 'ทั้งหมด')
       params.append('category', debounced.selectedCategory);
+    if (debounced.nationality) params.append('nationality', debounced.nationality);
 
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/stores?${params.toString()}`)
       .then(res => res.json())
@@ -44,6 +46,8 @@ export function FilterProvider({ children }) {
         setLocation,
         selectedCategory,
         setSelectedCategory,
+        nationality,
+        setNationality,
         categories,
         filteredStores,
       }}

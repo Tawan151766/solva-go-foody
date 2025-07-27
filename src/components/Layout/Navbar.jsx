@@ -20,6 +20,27 @@ export default function Navbar() {
   } = useContext(FilterContext);
   const [showFilters, setShowFilters] = useState(false);
   const pathname = usePathname();
+  const nation = [
+    "ไทย",
+    "นานาชาติ",
+    "ญี่ปุ่น",
+    "จีน",
+    "อิตาเลียน",
+    "ฝรั่งเศส",
+    "อินเดีย",
+  ];
+
+  const foodTypes = [
+    "ก๋วยเตี๋ยว",
+    "คาเฟ่",
+    "อาหารญี่ปุ่น",
+    "ติ่มซำ",
+    "อาหารทะเล",
+    "มังสวิรัติ",
+    "พิซซ่า",
+    "เบเกอรี่",
+    "อาหารอินเดีย",
+  ];
 
   return (
     <>
@@ -82,16 +103,17 @@ export default function Navbar() {
                 <div className="relative w-full sm:w-1/3">
                   <select
                     value={nationality}
-                    onChange={e => setNationality && setNationality(e.target.value)}
+                    onChange={(e) =>
+                      setNationality && setNationality(e.target.value)
+                    }
                     className="px-4 py-2 rounded-xl border border-[#e0e7ef] shadow-sm focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20 text-base w-full bg-white transition-all duration-150 appearance-none pr-10 text-[#2563eb] font-semibold"
                   >
                     <option value="">เลือกสัญชาติอาหาร</option>
-                    <option value="ไทย">ไทย</option>
-                    <option value="อิตาลี">อิตาลี</option>
-                    <option value="ญี่ปุ่น">ญี่ปุ่น</option>
-                    <option value="จีน">จีน</option>
-                    <option value="นานาชาติ">นานาชาติ</option>
-                    <option value="ฝรั่งเศษ">ฝรั่งเศษ</option>
+                    {nation.map((nat) => (
+                      <option key={nat} value={nat}>
+                        {nat}
+                      </option>
+                    ))}
                   </select>
                   <span className="absolute top-1/2 right-3 -translate-y-1/2 text-[#64748b] pointer-events-none">
                     <svg
