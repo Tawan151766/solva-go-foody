@@ -13,17 +13,13 @@
 # testing
 /coverage
 
+
 # next.js
 /.next/
 /out/
-
-# production
-/build
-
+*.swp
 # misc
 .DS_Store
-*.pem
-
 Thumbs.db
 Icon?
 *.log
@@ -35,6 +31,16 @@ Icon?
 *.swo
 .ipynb_checkpoints/
 .vscode/
+dist/
+*.tgz
+*.exe
+*.pem
+
+# Env and config
+.env
+.env.*
+.vscode/
+babel.config.js
 dist/
 *.tgz
 *.exe

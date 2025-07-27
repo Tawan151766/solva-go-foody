@@ -1,3 +1,15 @@
+## Jest and Babel (for Testing Only)
+
+If you encounter errors about JSX or Babel when running Jest tests, you may need to add a minimal `babel.config.js` file for test compatibility:
+
+```js
+// babel.config.js (for Jest only, do NOT commit for production Next.js build)
+module.exports = {
+  presets: ["next/babel"],
+};
+```
+
+> ⚠️ Only use this file locally for testing. Delete or ignore it before building or deploying with Next.js to avoid SWC conflicts.
 ## Testing with Jest
 
 This project uses [Jest](https://jestjs.io/) and [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/) for unit and component testing.
