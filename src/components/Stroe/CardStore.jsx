@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { HiStar } from "react-icons/hi";
 
-export default function CardStore({ address, rating, image, name, id }) {
+export default function CardStore({ address, rating, image, name, id, openingHours, nationality, category }) {
   return (
     <Link
       href={`/store/${id}`}
@@ -27,8 +27,26 @@ export default function CardStore({ address, rating, image, name, id }) {
             <p className="text-[#64748b] text-sm font-medium leading-normal truncate mb-2">
               {address}
             </p>
+            {/* Modern info row */}
+            <div className="flex flex-wrap gap-2 mt-2">
+              {category && (
+                <span className="inline-block bg-[#e0e7ef] text-[#2563eb] text-xs font-semibold px-2 py-1 rounded-full">
+                  {category}
+                </span>
+              )}
+              {nationality && (
+                <span className="inline-block bg-[#f5f8fa] text-[#64748b] text-xs font-semibold px-2 py-1 rounded-full">
+                  {nationality}
+                </span>
+              )}
+              {openingHours && (
+                <span className="inline-block bg-[#2563eb]/10 text-[#2563eb] text-xs font-semibold px-2 py-1 rounded-full">
+                  {openingHours}
+                </span>
+              )}
+            </div>
           </div>
-          <span className="inline-flex items-center gap-1 bg-white/90 text-[#2563eb] text-xs font-bold px-3 py-1 rounded-full shadow w-fit">
+          <span className="inline-flex items-center gap-1 bg-white/90 text-[#2563eb] text-xs font-bold px-3 py-1 rounded-full shadow w-fit mt-3">
             <HiStar className="w-4 h-4 text-yellow-400" />
             {rating}
           </span>

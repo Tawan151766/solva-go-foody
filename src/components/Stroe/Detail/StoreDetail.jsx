@@ -57,11 +57,25 @@ export default function StoreDetail({ store }) {
             </div>
           </div>
 
-          {/* Category Badge */}
-          <div className="absolute top-4 left-4">
-            <span className="bg-[#2563eb] text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
-              {store.category}
-            </span>
+          {/* Info Badges: Category, Nationality, Opening Hours */}
+          <div className="absolute top-4 left-4 flex flex-col gap-2 z-10">
+            <div className="flex flex-wrap gap-2">
+              {store.category && (
+                <span className="bg-[#2563eb] text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+                  {store.category}
+                </span>
+              )}
+              {store.nationality && (
+                <span className="bg-[#f5f8fa] text-[#2563eb] px-3 py-1 rounded-full text-xs font-bold shadow-lg border border-[#2563eb]/20">
+                  {store.nationality}
+                </span>
+              )}
+              {store.openingHours && (
+                <span className="bg-white text-[#2563eb] px-3 py-1 rounded-full text-xs font-bold shadow-lg border border-[#2563eb]/10">
+                  {store.openingHours}
+                </span>
+              )}
+            </div>
           </div>
         </div>
 

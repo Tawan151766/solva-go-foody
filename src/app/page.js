@@ -15,10 +15,6 @@ import { useEffect } from "react";
 function HomePage() {
   // Use filter from FilterContext (global state)
   const { filteredStores } = useContext(FilterContext);
-
-  if (!filteredStores) {
-    return <LoadingSpinner />;
-  }
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(4);
   // Responsive pageSize: md = 3, default = 4
@@ -34,6 +30,11 @@ function HomePage() {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  if (!filteredStores) {
+    return <LoadingSpinner />;
+  }
+
   const totalPages = Math.ceil(filteredStores.length / pageSize);
   const pagedStores = filteredStores.slice(page * pageSize, (page + 1) * pageSize);
 
@@ -52,6 +53,9 @@ function HomePage() {
               image={restaurant.image}
               name={restaurant.name}
               id={restaurant.id}
+              openingHours={restaurant.openingHours}
+              nationality={restaurant.nationality}
+              category={restaurant.category}
             />
           ))
         )}

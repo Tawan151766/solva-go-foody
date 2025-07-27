@@ -14,6 +14,9 @@ export default function Navbar() {
     setSearch,
     location = "",
     setLocation,
+    nationality = "",
+    setNationality,
+    nationalities = [],
   } = useContext(FilterContext);
   const [showFilters, setShowFilters] = useState(false);
   const pathname = usePathname();
@@ -51,8 +54,8 @@ export default function Navbar() {
           {" "}
           {pathname === "/" && (
             <>
-              <div className="flex flex-col sm:flex-row items-stretch md:items-center gap-2 flex-1 max-w-full md:max-w-xl mx-auto md:mx-4 w-full">
-                <div className="relative w-full sm:w-1/2">
+              <div className="flex flex-col sm:flex-row items-stretch md:items-center gap-2 flex-1 max-w-full md:max-w-2xl mx-auto md:mx-4 w-full">
+                <div className="relative w-full sm:w-1/3">
                   <input
                     type="text"
                     placeholder="ค้นหาชื่อร้าน..."
@@ -64,7 +67,7 @@ export default function Navbar() {
                     <HiSearch className="w-5 h-5" />
                   </span>
                 </div>
-                <div className="relative w-full sm:w-1/2">
+                <div className="relative w-full sm:w-1/3">
                   <input
                     type="text"
                     placeholder="ค้นหาสถานที่..."
@@ -74,6 +77,36 @@ export default function Navbar() {
                   />
                   <span className="absolute top-1/2 right-3 -translate-y-1/2 text-[#64748b]">
                     <HiLocationMarker className="w-5 h-5" />
+                  </span>
+                </div>
+                <div className="relative w-full sm:w-1/3">
+                  <select
+                    value={nationality}
+                    onChange={e => setNationality && setNationality(e.target.value)}
+                    className="px-4 py-2 rounded-xl border border-[#e0e7ef] shadow-sm focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/20 text-base w-full bg-white transition-all duration-150 appearance-none pr-10 text-[#2563eb] font-semibold"
+                  >
+                    <option value="">เลือกสัญชาติอาหาร</option>
+                    <option value="ไทย">ไทย</option>
+                    <option value="อิตาลี">อิตาลี</option>
+                    <option value="ญี่ปุ่น">ญี่ปุ่น</option>
+                    <option value="จีน">จีน</option>
+                    <option value="นานาชาติ">นานาชาติ</option>
+                    <option value="ฝรั่งเศษ">ฝรั่งเศษ</option>
+                  </select>
+                  <span className="absolute top-1/2 right-3 -translate-y-1/2 text-[#64748b] pointer-events-none">
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
                   </span>
                 </div>
               </div>
