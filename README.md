@@ -1,3 +1,34 @@
+## Testing with Jest
+
+This project uses [Jest](https://jestjs.io/) and [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/) for unit and component testing.
+
+### Running Tests
+
+To run all tests:
+
+```bash
+npm test
+```
+
+Test files are located in `src/__tests__/` and use the `.test.js` extension.
+
+### Example Test
+
+See `src/__tests__/store-detail.test.js` for a sample component test:
+
+```js
+import { render, screen } from '@testing-library/react';
+import StoreDetail from '@/components/Stroe/Detail/StoreDetail';
+
+it('renders store details', () => {
+  render(<StoreDetail store={mockStore} />);
+  expect(screen.getByText('Test Store')).toBeInTheDocument();
+});
+```
+
+### Notes
+- JSDOM is used as the test environment.
+- Some browser APIs (like `window.matchMedia`) are mocked in test files as needed.
 # Solva Go Foody
 
 Online Food Ordering Application built with Next.js, React, and Tailwind CSS
